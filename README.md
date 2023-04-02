@@ -3,7 +3,7 @@
 This is a standalone pytorch implementation of [Counterpoint by Convolution](https://arxiv.org/abs/1903.07227) (Coconet) with a chord embedding layer. This implementation is based on [kevindonoghue's implementation](https://github.com/kevindonoghue/coconet-pytorch),
 while changed few parameters and network structures for reproducing the network in the paper.
 
-An RNN model with LSTM is also implemented here. 
+An RNN model with LSTM with chord embedding layer is also implemented here.
 
 The code in this repo is modified
 from [kevindonoghue's implementation](https://github.com/kevindonoghue/coconet-pytorch)
