@@ -2,6 +2,7 @@ import numpy as np
 import musicpy as mp
 
 midi_to_note_dict = {
+    # update all values to add 30 to the key
     21: 'A0',
     33: 'A1',
     45: 'A2',
@@ -104,13 +105,23 @@ def get_chord_label(notes_midi):
     Outputs:
     chord_labels: string array with shape (N // 16)
     '''
-    num = notes_midi.shape[0]
+    num = notes_midi.shape[-1]
     chord_labels = []
-    for i in range(0, num-16+1, 16):
-        cur_bar = notes_midi[i:i+16]
-        cur_notes = midi_to_note(cur_bar)
-        cur_chord = mp.alg.detect(cur_notes, same_note_special=True)
-        cur_chord = cur_chord.strip("[").split(" ")
+    # calculate the chord for each bar
+    for i in range(num // 16):
+        # get the notes in this bar
+        # if notes is 1d array, then notes[i*16:(i+1)*16]
+        # if notes is above 1d array, then notes[:, i*16:(i+1)*16]
+        if len(notes_midi.shape) == 1:
+            notes = notes_midi[i*16:(i+1)*16]
+        else:
+            notes = notes_midi[:, i*16:(i+1)*16]
+        # get the unique notes
+        unique_notes = np.unique(notes)
+        # get the chord
+        note_names = midi_to_note(unique_notes)
+        cur_chord = mp.alg.detect(note_names, same_note_special=True)
+        cur_chord = cur_chord.strip("[").replace("/", " ").replace("]", "").split(" ")
         if cur_chord[0] == 'note':
           chord_labels.append(cur_chord[1])
         else:
@@ -129,7 +140,7 @@ def midi_to_note(notes_midi):
     '''
     notes_name = []
     for note in notes_midi:
-        cur = midi_to_note_dict.get(note)
+        cur = midi_to_note_dict.get(note+30)
         notes_name.append(cur)
     
     return notes_name

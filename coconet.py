@@ -179,8 +179,6 @@ def harmonize(y, C, model, chord_id, device):
   """
   model.eval()
   chord_id = torch.tensor(chord_id).to(device)
-  model.eval()
-  chord_id = torch.tensor(chord_id).to(device)
   with torch.no_grad():
     x = y
     C2 = C.copy()
